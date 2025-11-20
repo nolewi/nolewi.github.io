@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>NePO: Neural Point Octrees for Large-scale Novel View Synthesis</title>
+
+    <meta name="description" content="In this paper, we present a novel way to refine depth maps initialized from monoscopic depth estimators via mulit-view differential rendering." />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="https://nolewi.github.io/nepo/media/thumbnail.jpg">
+    <meta property="og:image:type" content="image/jpg">
+    <!-- <meta property="og:video:width" content="750">
+    <meta property="og:image:height" content="500"> -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NePO: Neural Point Octrees for Large-scale Novel View Synthesis" />
+    <meta property="og:description" content="Neural point octrees (NePOs) improve radiance field rendering for large-scale datasets by organizing point clouds into octrees, enabling efficient Level of Detail selection and real-time rendering of complex scenes." />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="https://nolewi.github.io/nepo/" />
+    <meta name="twitter:title" content="NePO: Neural Point Octrees for Large-scale Novel View Synthesis" />
+    <meta name="twitter:description" content="Neural point octrees (NePOs) improve radiance field rendering for large-scale datasets by organizing point clouds into octrees, enabling efficient Level of Detail selection and real-time rendering of complex scenes." />
+    <meta name="twitter:image" content="https://nolewi.github.io/nepo/media/thumbnail.jpg" />
+
+
+<!--
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+//-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/video_comparison.js"></script>
+
+    <link rel="stylesheet" href="css/dics.min.css">
+    <script src="js/dics.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', domReady);
+        function domReady() {
+            for (const e of document.querySelectorAll(".b-dics")) {
+                new Dics({
+                    container: e,
+                    textPosition: "top"
+                });
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <a href="..">Back to my projects</a>
+        <br><br>
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <b>NePO: Neural Point Octrees for Large-scale Novel View Synthesis</b>
+                
+                <!-- <small>
+                    Under review
+                </small> -->
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <a style="text-decoration:none" href="https://nolewi.github.io">
+                            Noah Lewis
+                        </a>
+
+                        <br>FAU Erlangen-Nürnberg<br> &zwnj;
+                    </li>
+                    <li>
+                        <a style="text-decoration:none" href="https://lfranke.github.io">
+                            Linus Franke
+                        </a>
+                        <br>FAU Erlangen-Nürnberg<br> &zwnj;
+                    </li>
+                    <li>
+                        <a style="text-decoration:none" href="https://github.com/darglein">
+                            Darius Rückert
+                        </a>
+                        <br>FAU Erlangen-Nürnberg<br> 
+                        Voxray GmbH
+                    </li>
+                    <li>
+                        <a style="text-decoration:none" href="https://www.lgdv.tf.fau.de/person/marc-stamminger/">
+                            Marc Stamminger
+                        </a>
+                        <br>FAU Erlangen-Nürnberg
+                        <br>  &zwnj;
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="row">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <ul class="nav nav-pills nav-justified">
+                        <li>
+                            <a href="TODO">
+                            <img src="media/paper_icon.png" height="60px">
+                                <h4><strong>Paper <br> (coming soon)</strong></h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="TODO">
+                            <img src="media/youtube_icon.png" height="60px">
+                                <h4><strong>Video <br> (coming soon)</strong></h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="TODO">
+                            <image src="media/github.png" height="60px">
+                                <h4><strong>Code <br> (coming soon)</strong></h4>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+
+
+
+        <!-- <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <video id="v0" width="100%" autoplay loop muted controls>
+                  <source src="media/teaser_animated_lower_faster_cropped.mp4" type="video/mp4" />
+                </video>
+			</div>
+        </div> -->
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Abstract
+                </h3>
+                <p class="text-justify">
+                    Point-based radiance field rendering produces impressive results for novel-view synthesis tasks. Established methods work with object-centric datasets or room-sized scenes, as computational resources and model capabilities are limited. To overcome this limitation, we introduce neural point octrees (NePOs) to radiance field rendering, which enables optimization and rendering of large scale datasets at varying detail levels, including different acquisition modalities, such as camera drones and LiDAR vehicles.
+                    <br>
+                    Our method organizes input point clouds into an octree from the bottom up, enabling Level of Detail (LoD) selection during rendering. Appearance descriptors for each point are optimized using the RGB captures, enabling our system to self-refine and address real-world challenges such as capture coverage discrepancies and SLAM pose drift. The refinement is achieved by adaptively densifying octree nodes during training and optimizing camera poses via gradient descent. Overall, our approach efficiently optimizes scenes with thousands of images and renders scenes containing hundreds of millions of points in real time.
+                </p>
+            </div>
+        </div>
+
+        <br><br>
+
+        <!-- <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <video id="v0" width="100%" autoplay loop muted controls>
+                  <source src="media/result_teaser_lower_faster.mp4" type="video/mp4" />
+                </video>
+            </div>
+        </div> -->
+
+        <br><br>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Pipeline
+                </h3>
+                Overview of our rendering pipeline.
+            <br><br>
+                <img id="test" src="media/pipeline.png" width="100%">  
+                <br><br>
+                Figure 1: We preprocess our unstructured point cloud to an octree. For rendering and optimization, we cut the octree based on level of detail (LOD) considerations and rasterize into multi-resolution feature images with progressively lower resolutions. A neural renderer and subsequent tone mapper resolve and combine the image pyramid. Following a temporal anti-aliasing module smooths the rendering. During training, all points as well as camera and tone mapping parameters are optimized, and the octree cells are further densified and pruned.
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row comp-margin">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Depth Buffer Reconstruction.
+                </h3>
+                We exploit our renderer's multi-resolution output and use hierarchical coverage-based depth upsampling [Grossman 1998] to reconstruct an approximate (but filled) depth buffer, which is then used for sample reprojection.
+                 <br>
+                 <br>
+                
+                 <div style="width: 100%; text-align: center;">
+                    (Videos will play during mouse hovering / on touch on mobile version.)
+                    <video class="video" id="mc_depth_filled" loop playsinline autoplay muted src="media/depth/mc_depth_filled_vs_points_small.mp4" ></video>
+                    <canvas class="videoMerge" id="mc_depth_filledMerge"></canvas>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Depth filled
+                                </td>
+                                <td style="text-align: right;">
+                                    Point depth
+                                </td>
+                            </tr>
+                        </tbody></table>  
+                    </div>                     
+                <p class="text-justify"></p>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row comp-margin">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Temporal Smoothing.
+                </h3>
+                We exploit our renderer's multi-resolution output and use hierarchical coverage-based depth upsampling [Grossman 1998] to reconstruct an approximate (but filled) depth buffer, which is then used for sample reprojection.
+                 <br>
+                 <br>
+                
+                 <div style="width: 100%; text-align: center;">
+                    (Videos will play during mouse hovering / on touch on mobile version.)
+                    <video class="video" id="ours_colmap_09f" loop playsinline autoplay muted src="media/depth/mc_depth_filled_vs_points_small.mp4" ></video>
+                    <canvas class="videoMerge" id="ours_colmap_09fMerge"></canvas>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left;">
+                                    Depth filled
+                                </td>
+                                <td style="text-align: right;">
+                                    Point depth
+                                </td>
+                            </tr>
+                        </tbody></table>  
+                    </div>                     
+                <p class="text-justify"></p>
+            </div>
+        </div>
+        <br>
+
+        <!-- TODO -->
+        <!-- <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Video with short Explanation
+                </h3>
+                <div class="text-center">
+                    <div style="position:relative;padding-top:56.25%;"> 
+                        <iframe src="https://www.youtube-nocookie.com/embed/aMbE5WAgD2k?start=0&amp;loop=1&amp;autoplay=0&amp;mute=0"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- &amp;end=30 -->
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Citation
+                </h3>
+                <div class="form-group col-md-12 col-md-offset-0">
+                    <textarea id="bibtex" class="form-control" readonly>
+@article{lewis2024nepo,
+    title={NePO: Neural Point Octrees for Large-scale Novel View Synthesis},
+    author={Noah Lewis and Linus Franke and Darius Rückert and Marc Stamminger},
+    journal={arXiv preprint arXiv:TODO},
+    year = {2024}
+}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Acknowledgements
+                </h3>
+
+                <p class="text-justify">
+                We would like to thank all members of the Visual Computing Lab Erlangen for the fruitful discussions.
+                Special thanks to <a href="https://github.com/richardmarcus">Richard Marcus</a> for preparing and providing the DurLAR dataset in a ready-to-use format.
+                <br>
+                The authors gratefully acknowledge the scientific support and HPC resources provided by the National High Performance Computing Center  of the Friedrich-Alexander-Universität Erlangen-Nürnberg (NHR@FAU) under the project b162dc. NHR funding is provided by federal and Bavarian state authorities. NHR@FAU hardware is partially funded by the German Research Foundation (DFG) – 440719683.
+                Linus Franke was supported by the Bavarian Research Foundation (Bay. Forschungsstiftung) AZ-1422-20.
+                </p>
+                <br>
+                <br>
+                
+
+                <p class="text-justify">
+                    The website template was adapted from <a href="https://lorafib.github.io/ref_depth/">Refinement of Monocular Depth Maps via Multi-View Differentiable Rendering</a>, who borrowed from <a href="https://lfranke.github.io/vet">VET</a>, who borrowed from <a href="https://jonbarron.info/zipnerf/">Zip-NeRF</a>, who borrowed from <a href="http://mgharbi.com/">Michaël Gharbi</a> and <a href="https://dorverbin.github.io/refnerf">Ref-NeRF</a>.
+                    Image sliders are from <a href="https://bakedsdf.github.io/">BakedSDF</a>.
+                </p>
+            </div>
+        </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                References
+            </h3>
+    <div class="content has-text-justified">
+        <p>
+            [Kerbl and Kopanas 2023] Kerbl, B., Kopanas, G., Leimkühler, T., and Drettakis, G. 2023. "3D Gaussian splatting for real-time radiance field rendering". ACM Transactions on Graphics (ToG), 42(4).
+        </p>
+        <p>
+            [Rückert 2022] Rückert, D., Franke, L., and Stamminger, M., 2022. "Adop: Approximate differentiable one-pixel point rendering". ACM Transactions on Graphics (ToG), 41(4).
+        </p>
+        <p>
+            [Kerbl and Meuleman 2024] Kerbl, B., Meuleman, A., Kopanas, G., Wimmer, M., Lanvin, A. and Drettakis, G., 2024. "A Hierarchical 3D Gaussian Representation for Real-Time Rendering of Very Large Datasets". ACM Transactions on Graphics (ToG), 43(4).
+        </p>
+      </div>
+    </div>
+
+</body>
+</html>
